@@ -48,4 +48,6 @@ fig.update_layout(
     yaxis_title_font_size=20,
 )
 
+fig.update_traces(marker_color="SteelBlue", marker_opacity=0.6)
+
 fig.show()
