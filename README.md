@@ -1,6 +1,6 @@
-# GitHub Stars Visualizer
+# Exploring APIs
 
-This project uses plotly express to visualize the most starred Python repositories, using the GitHub API. This project is based in the one found on chapter 17 of [_Python Crash Course_ by Eric Matthes](https://nostarch.com/python-crash-course-3rd-edition).
+This project uses plotly express to visualize the most starred Python repositories using the GitHub API, and the responses retrieved from the Hacker News API. This project is based on the one found on chapter 17 of [_Python Crash Course_ by Eric Matthes](https://nostarch.com/python-crash-course-3rd-edition).
 
 ## How to run?
 
@@ -9,5 +9,5 @@ This project uses plotly express to visualize the most starred Python repositori
 3. `cd` into the project's directory and run the following command:
 
 ```shell
-uv run python_repos_visual.py
+uv run [name_of_script].py
 ```
