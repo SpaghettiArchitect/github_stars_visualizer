@@ -1,53 +1,64 @@
 import plotly.express as px
 import requests
 
-# Make an API call and check the response.
-url = "https://api.github.com/search/repositories"
-url += "?q=language:python+sort:stars+stars:>10000"
 
-headers = {"Accept": "application/vnd.github.v3+json"}
-r = requests.get(url, headers=headers)
-print(f"Status code: {r.status_code}")
+def main() -> None:
+    """Run and show the repositories graph."""
+    # Ask the user for a programming language to search.
+    language = input("Which programming language? ")
 
-# Process overall results.
-response_dict = r.json()
-print(f"Complete results: {not response_dict['incomplete_results']}")
+    # Make an API call and check the response.
+    url = "https://api.github.com/search/repositories"
+    url += f"?q=language:{language}+sort:stars+stars:>10000"
 
-# Process repository information.
-repo_dicts = response_dict["items"]
-repo_links, stars, hover_texts = [], [], []
-for repo_dict in repo_dicts:
-    # Turn repo names into active links.
-    repo_name = repo_dict["name"]
-    repo_url = repo_dict["html_url"]
-    repo_link = f"<a href='{repo_url}'>{repo_name}</a>"
-    repo_links.append(repo_link)
+    headers = {"Accept": "application/vnd.github.v3+json"}
+    r = requests.get(url, headers=headers)
+    print(f"Status code: {r.status_code}")
 
-    stars.append(repo_dict["stargazers_count"])
+    # Process overall results.
+    response_dict = r.json()
+    print(f"Complete results: {not response_dict['incomplete_results']}")
 
-    # Build hover texts.
-    owner = repo_dict["owner"]["login"]
-    description = repo_dict["description"]
-    hover_text = f"{owner}<br />{description}"
-    hover_texts.append(hover_text)
+    # Process repository information.
+    repo_dicts = response_dict["items"]
+    repo_links, stars, hover_texts = [], [], []
+    for repo_dict in repo_dicts:
+        # Turn repo names into active links.
+        repo_name = repo_dict["name"]
+        repo_url = repo_dict["html_url"]
+        repo_link = f"<a href='{repo_url}'>{repo_name}</a>"
+        repo_links.append(repo_link)
 
-# Make visualization.
-title = "Most-Starred Python Projects on GitHub"
-labels = {"x": "Repository", "y": "Stars"}
-fig = px.bar(
-    x=repo_links,
-    y=stars,
-    title=title,
-    labels=labels,
-    hover_name=hover_texts,
-)
+        stars.append(repo_dict["stargazers_count"])
 
-fig.update_layout(
-    title_font_size=28,
-    xaxis_title_font_size=20,
-    yaxis_title_font_size=20,
-)
+        # Build hover texts.
+        owner = repo_dict["owner"]["login"]
+        description = repo_dict["description"]
+        hover_text = f"{owner}<br />{description}"
+        hover_texts.append(hover_text)
 
-fig.update_traces(marker_color="SteelBlue", marker_opacity=0.6)
+    # Make visualization.
+    title = f"Most-Starred {language.capitalize()} Projects on GitHub"
+    labels = {"x": "Repository", "y": "Stars"}
+    fig = px.bar(
+        x=repo_links,
+        y=stars,
+        title=title,
+        labels=labels,
+        hover_name=hover_texts,
+    )
 
-fig.show()
+    fig.update_layout(
+        title_font_size=28,
+        xaxis_title_font_size=20,
+        yaxis_title_font_size=20,
+    )
+
+    fig.update_traces(marker_color="SteelBlue", marker_opacity=0.6)
+
+    fig.show()
+
+
+if __name__ == "__main__":
+    # Execute the program.
+    main()
