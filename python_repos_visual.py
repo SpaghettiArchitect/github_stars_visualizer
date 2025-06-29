@@ -7,16 +7,8 @@ def main() -> None:
     # Ask the user for a programming language to search.
     language = input("Which programming language? ")
 
-    # Make an API call and check the response.
-    url = "https://api.github.com/search/repositories"
-    url += f"?q=language:{language}+sort:stars+stars:>10000"
-
-    headers = {"Accept": "application/vnd.github.v3+json"}
-    r = requests.get(url, headers=headers)
-    print(f"Status code: {r.status_code}")
-
-    # Process overall results.
-    response_dict = r.json()
+    status_code, response_dict = get_github_data(language)
+    print(f"Status code: {status_code}")
     print(f"Complete results: {not response_dict['incomplete_results']}")
 
     # Process repository information.
@@ -57,6 +49,24 @@ def main() -> None:
     fig.update_traces(marker_color="SteelBlue", marker_opacity=0.6)
 
     fig.show()
+
+
+def get_github_data(language: str) -> tuple[int, dict]:
+    """Get the GitHub data for the current language.
+
+    Returns a tuple with the status code and the JSON dictionary.
+    """
+    # Make an API call to GitHub.
+    url = "https://api.github.com/search/repositories"
+    url += f"?q=language:{language}+sort:stars+stars:>10000"
+
+    headers = {"Accept": "application/vnd.github.v3+json"}
+    r = requests.get(url, headers=headers)
+
+    # Process overall results.
+    response_dict = r.json()
+
+    return (r.status_code, response_dict)
 
 
 if __name__ == "__main__":
