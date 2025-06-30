@@ -1,3 +1,5 @@
+import textwrap
+
 import plotly.express as px
 import requests
 
@@ -25,8 +27,18 @@ def main() -> None:
 
         # Build hover texts.
         owner = repo_dict["owner"]["login"]
-        description = repo_dict["description"]
-        hover_text = f"{owner}<br />{description}"
+        if repo_dict["description"]:
+            description = "<br />".join(
+                textwrap.wrap(
+                    repo_dict["description"],
+                    width=45,
+                    max_lines=10,
+                )
+            )
+        else:
+            description = "No Description."
+
+        hover_text = f"<i>{owner}</i><br />{description}"
         hover_texts.append(hover_text)
 
     # Make visualization.
